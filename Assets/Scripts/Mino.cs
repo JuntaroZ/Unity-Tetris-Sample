@@ -62,6 +62,7 @@ public class Mino : MonoBehaviour
                     FindObjectOfType<SpawnMino>().NewMino();
                 }
                 this.enabled = false;
+                FindObjectOfType<SfxPlayer>().PlaySfx(0); // Mino地面着地の音を再生
             }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -87,6 +88,7 @@ public class Mino : MonoBehaviour
                     transform.position += new Vector3(-1, 0, 0);
                 }
             }
+            FindObjectOfType<SfxPlayer>().PlaySfx(1); // Mino回転の音を再生
         }
     }
     EnResult ValidMovement(int x, int y)
@@ -147,6 +149,8 @@ public class Mino : MonoBehaviour
         {
             if (HasLine(i))
             {
+                FindObjectOfType<ParticlePlayer>().Play(new Vector3(0, i - height / 2, 0));
+                FindObjectOfType<SfxPlayer>().PlaySfx(2); // Mino消去の音を再生
                 DeleteLine(i);
                 RowDown(i);
                 FindObjectOfType<GameManager>().AddScore(100);
