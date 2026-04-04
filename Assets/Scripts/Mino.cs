@@ -173,8 +173,8 @@ public class Mino : MonoBehaviour
 
     private IEnumerator DelayRowDown(List<int> deleteLineList)
     {
-        // エフェクト再生のために少し待つ（例: 2.0秒）
-        yield return new WaitForSeconds(2.0f);
+        // エフェクト再生のために少し待つ（例: 1.0秒）
+        yield return new WaitForSeconds(1.0f);
         // 消去したラインを上から順に下げる
         foreach (int i in deleteLineList)
         {
