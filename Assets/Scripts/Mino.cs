@@ -63,9 +63,9 @@ public class Mino : MonoBehaviour
                 if (isDelete == false)
                 {
                     FindObjectOfType<SfxPlayer>().PlaySfx(0); // Mino地面着地の音を再生
+                    // 新しいminoを生成
+                    FindObjectOfType<SpawnMino>().NewMino();
                 }
-                // 新しいminoを生成
-                FindObjectOfType<SpawnMino>().NewMino();
             }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -181,6 +181,8 @@ public class Mino : MonoBehaviour
             RowDown(i);
         }
         deleteLineList.Clear();
+        // 新しいminoを生成
+        FindObjectOfType<SpawnMino>().NewMino();
     }
 
     bool HasLine(int i)
