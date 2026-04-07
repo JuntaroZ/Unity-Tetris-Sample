@@ -1,15 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 
 public class Mino : MonoBehaviour
 {
-    // 
-    public float previousTime;
-    // minoが落ちるタイム
-    public float fallTime = 1f;
+    public enum KeyType
+    {
+        LeftArrow,
+        RightArrow,
+        DownArrow,
+        UpArrow
+    }
 
-    // ステージの大きさ
+    [System.Serializable]
+    public class MinoConfig
+    {
+        public KeyType keyType;
+        public bool repeatKey = false;
+        public Vector3 addVector = new Vector3(0, 0, 0);
+        public bool rotate = false;
+    }
+
+    public List<MinoConfig> minoConfigList = new List<MinoConfig>();
+    public float autoFallTime = 1f;
+    public float repeatFallTime = 0.05f;
+    private float previousTime = 0f;
+    private Dictionary<KeyType, KeyCode> dictKeyMap = new Dictionary<KeyType, KeyCode>
+    {
+        {KeyType.LeftArrow, KeyCode.LeftArrow},
+        {KeyType.RightArrow, KeyCode.RightArrow},
+        {KeyType.DownArrow, KeyCode.DownArrow},
+        {KeyType.UpArrow, KeyCode.UpArrow},
+    };
+   // ステージの大きさ
     private const int width = 10;
     private const int height = 20;
     private Vector3 rotationPoint = new Vector3(0.0f, 0.0f, 0.0f); // minoの回転の中心点
@@ -31,18 +55,103 @@ public class Mino : MonoBehaviour
 
     void Update()
     {
+        foreach (MinoConfig config in minoConfigList)
+        {
+            bool moveOn = false;
+            Vector3 addVector = config.addVector;
+            if (config.repeatKey)
+            {
+                if (Input.GetKey(dictKeyMap[config.keyType]) && Time.time - previousTime > repeatFallTime)
+                {
+                    moveOn = true;      
+                    previousTime = Time.time;
+                }
+            } 
+            else
+            {
+                if (Input.GetKeyDown(dictKeyMap[config.keyType]))
+                {
+                    moveOn = true;      
+                }
+            }
+            // 自動落下
+            if (Time.time - previousTime > autoFallTime)
+            {
+                addVector = new Vector3(0, -1, 0);
+                moveOn = true;
+                previousTime = Time.time;
+            }
+
+            if (moveOn)
+            {
+                if (config.rotate) // 回転の処理を優先
+                {
+                    // minoを回転させる
+                    transform.RotateAround(transform.TransformPoint(rotationPoint), rotationXYZ, +rotationAngle);
+                    var result = ValidMovement(0, 0);
+                    if (result == EnResult.enInvalidBottom || result == EnResult.enInvalidGrid)
+                    {
+                        // 回転させた後に、もし下に移動できない場合は、回転を元に戻す
+                        transform.RotateAround(transform.TransformPoint(rotationPoint), rotationXYZ, -rotationAngle);
+                        return;
+                    }
+                    // 両側の壁に埋まってたら修正を繰り返す
+                    foreach (Transform children in transform)
+                    {
+                        if (ValidMovement(0, 0) == EnResult.enInvalidLeft)
+                        {
+                            transform.position += new Vector3(1, 0, 0);
+                        }
+                        if (ValidMovement(0, 0) == EnResult.enInvalidRight)
+                        {
+                            transform.position += new Vector3(-1, 0, 0);
+                        }
+                    }
+                    FindObjectOfType<SfxPlayer>().PlaySfx(1); // Mino回転の音を再生
+                }
+
+                var resultMove = ValidMovement((int)addVector.x, (int)addVector.y);
+                if (resultMove == EnResult.enSuccess)
+                {
+                    transform.position += addVector;
+                }
+                else if (addVector.y < 0.0f) // 下に移動できない場合は、Minoを固定する
+                {
+                    this.enabled = false;
+                    if (AddToGrid() == false)
+                    {
+                        // ゲームオーバー
+                        FindObjectOfType<GameManager>().SetGameOver();
+                        Debug.Log("Game Over");
+                        return;
+                    }
+
+                    bool isDelete = CheckDeleteLines();
+                    if (isDelete == false)
+                    {
+                        FindObjectOfType<SfxPlayer>().PlaySfx(0); // Mino地面着地の音を再生
+                        // 新しいminoを生成
+                        FindObjectOfType<SpawnMino>().NewMino();
+                    }
+                }
+                break; // 1回のUpdateで複数のキー入力を処理しないようにするため、キー入力があったらループを抜ける
+            }
+        }
+/*
         // 左矢印キーで左に動く
         if (Input.GetKeyDown(KeyCode.LeftArrow) && ValidMovement(-1, 0) == EnResult.enSuccess)
         {
             transform.position += new Vector3(-1, 0, 0);
         }
         // 右矢印キーで右に動く
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && ValidMovement(+1, 0) == EnResult.enSuccess)
+        if (Input.GetKeyDown(KeyCode.RightArrow) && ValidMovement(+1, 0) == EnResult.enSuccess)
         {
             transform.position += new Vector3(1, 0, 0);
         }
+*/
+/*
         // 自動で下に移動させつつ、下矢印キーでも移動する
-        else if ((Input.GetKey(KeyCode.DownArrow) && Time.time-previousTime > downMoveIntervalTime) || Time.time-previousTime >= fallTime) 
+        if ((Input.GetKey(KeyCode.DownArrow) && Time.time-previousTime > downMoveIntervalTime) || Time.time-previousTime >= 1.0f) 
         {
             if (ValidMovement(0, -1)== EnResult.enSuccess) {
                 transform.position += new Vector3(0, -1, 0);
@@ -93,6 +202,7 @@ public class Mino : MonoBehaviour
             }
             FindObjectOfType<SfxPlayer>().PlaySfx(1); // Mino回転の音を再生
         }
+*/
     }
     EnResult ValidMovement(int x, int y)
     {

@@ -139,9 +139,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff8d80adf87404f4ba7609539f76e842, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mino
-  previousTime: 0
-  fallTime: 1
-  rotationPoint: {x: 0, y: 0, z: 0}
+  minoConfigList:
+  - keyType: 0
+    autoFallTime: 0
+    repeatKey: 0
+    repeatFallTime: 0
+    addVector: {x: -1, y: 0, z: 0}
+  - keyType: 1
+    autoFallTime: 0
+    repeatKey: 0
+    repeatFallTime: 0
+    addVector: {x: 1, y: 0, z: 0}
+  - keyType: 2
+    autoFallTime: 0
+    repeatKey: 1
+    repeatFallTime: 0.05
+    addVector: {x: 0, y: -1, z: 0}
 --- !u!1 &5036925315810698614
 GameObject:
   m_ObjectHideFlags: 0
