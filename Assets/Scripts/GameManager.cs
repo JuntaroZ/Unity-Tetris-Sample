@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
     private int score = 0;
     public TextMeshPro scoreText; // スコア表示
     public TextMeshPro gameOverText; // GAME OVER表示
+    public float autoFallTime = 1f;
+    public float repeatFallTime = 0.05f;
 
     void Start()
     {

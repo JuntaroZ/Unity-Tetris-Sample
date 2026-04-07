@@ -23,8 +23,6 @@ public class Mino : MonoBehaviour
     }
 
     public List<MinoConfig> minoConfigList = new List<MinoConfig>();
-    public float autoFallTime = 1f;
-    public float repeatFallTime = 0.05f;
     private float previousTime = 0f;
     private Dictionary<KeyType, KeyCode> dictKeyMap = new Dictionary<KeyType, KeyCode>
     {
@@ -44,6 +42,7 @@ public class Mino : MonoBehaviour
     // Mino同士が重ならないようにするための配列(全Minoの状態保存のためstatic)
     private static Transform[,] grid = new Transform[width, height];
 
+    private GameManager gameManager;
     enum EnResult
     {
         enSuccess,
@@ -53,6 +52,10 @@ public class Mino : MonoBehaviour
         enInvalidGrid ,
     }
 
+    void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
     void Update()
     {
         foreach (MinoConfig config in minoConfigList)
@@ -61,7 +64,7 @@ public class Mino : MonoBehaviour
             Vector3 addVector = config.addVector;
             if (config.repeatKey)
             {
-                if (Input.GetKey(dictKeyMap[config.keyType]) && Time.time - previousTime > repeatFallTime)
+                if (Input.GetKey(dictKeyMap[config.keyType]) && Time.time - previousTime > gameManager.repeatFallTime)
                 {
                     moveOn = true;      
                     previousTime = Time.time;
@@ -75,7 +78,7 @@ public class Mino : MonoBehaviour
                 }
             }
             // 自動落下
-            if (Time.time - previousTime > autoFallTime)
+            if (Time.time - previousTime > gameManager.autoFallTime)
             {
                 addVector = new Vector3(0, -1, 0);
                 moveOn = true;
@@ -121,7 +124,7 @@ public class Mino : MonoBehaviour
                     if (AddToGrid() == false)
                     {
                         // ゲームオーバー
-                        FindObjectOfType<GameManager>().SetGameOver();
+                        gameManager.SetGameOver();
                         Debug.Log("Game Over");
                         return;
                     }
@@ -163,7 +166,7 @@ public class Mino : MonoBehaviour
                 if (AddToGrid() == false)
                 {
                     // ゲームオーバー
-                    FindObjectOfType<GameManager>().SetGameOver();
+                    gameManager.SetGameOver();
                     Debug.Log("Game Over");
                     return;
                 }
@@ -268,7 +271,7 @@ public class Mino : MonoBehaviour
                 FindObjectOfType<SfxPlayer>().PlaySfx(2); // Mino消去の音を再生
                 DeleteLine(i);
                 deleteLineList.Add(i);
-                FindObjectOfType<GameManager>().AddScore(addScore);
+                gameManager.AddScore(addScore);
                 addScore += 100; // 同時にラインを消すと、スコアがどんどん上がるようにする
             }
         }
