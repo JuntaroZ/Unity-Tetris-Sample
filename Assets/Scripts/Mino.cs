@@ -78,7 +78,7 @@ public class Mino : MonoBehaviour
                 }
             }
             // 自動落下
-            if (Time.time - previousTime > gameManager.autoFallTime)
+            if (gameManager.autoFallTime > 0 && Time.time - previousTime > gameManager.autoFallTime)
             {
                 addVector = new Vector3(0, -1, 0);
                 moveOn = true;
