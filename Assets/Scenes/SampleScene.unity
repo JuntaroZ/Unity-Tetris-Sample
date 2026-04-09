@@ -634,6 +634,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   scoreText: {fileID: 1247126590}
   gameOverText: {fileID: 1394128307}
+  autoFallTime: 1
+  repeatFallTime: 0.05
 --- !u!1 &878321621
 GameObject:
   m_ObjectHideFlags: 0
@@ -6211,9 +6213,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
   audioSource: {fileID: 1822566971}
-  sfx_landing: {fileID: 8300000, guid: 633ef7ed447959c4b9b34971d144ab6f, type: 3}
-  sfx_rotate: {fileID: 8300000, guid: 45c9dccbf381ec14ea41d9b1cb82cb3a, type: 3}
-  sfx_delete: {fileID: 8300000, guid: 04fbc1aee0629ff44ae7087f12967cc5, type: 3}
+  sfx_landing: {fileID: 8300000, guid: eb2f57d22aded354db9048ede2b532a4, type: 3}
+  sfx_rotate: {fileID: 8300000, guid: 55695d24bb25db0428c329b7ee2f5a11, type: 3}
+  sfx_delete: {fileID: 8300000, guid: 5bee97fa9c754bf4d83c90781b7d3f59, type: 3}
+  sfx_add_score: {fileID: 0}
+  sfx_add_score_max: {fileID: 0}
+  sfx_game_over: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
