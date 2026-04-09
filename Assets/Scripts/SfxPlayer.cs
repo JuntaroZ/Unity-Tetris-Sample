@@ -40,6 +40,9 @@ public class SfxPlayer : MonoBehaviour
                 sfx = sfx_add_score_max;
                 break;
         }
-        audioSource.PlayOneShot(sfx);
+        if (sfx != null) 
+        {
+            audioSource.PlayOneShot(sfx);
+        }
     }
 }

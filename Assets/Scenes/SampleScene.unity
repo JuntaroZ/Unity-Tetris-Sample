@@ -634,8 +634,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   scoreText: {fileID: 1247126590}
   gameOverText: {fileID: 1394128307}
-  autoFallTime: 1
   repeatFallTime: 0.05
+  autoFallDataList:
+  - score: 0
+    autoFallTime: 1
 --- !u!1 &878321621
 GameObject:
   m_ObjectHideFlags: 0
@@ -6037,7 +6039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0350a06cd0d9dc942ac08fa5ac188b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParticlePlayer
-  particleSystem: {fileID: 1110253666}
+  myParticleSystem: {fileID: 0}
 --- !u!1 &1822566969
 GameObject:
   m_ObjectHideFlags: 0
