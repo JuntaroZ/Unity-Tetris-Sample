@@ -6039,7 +6039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0350a06cd0d9dc942ac08fa5ac188b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParticlePlayer
-  myParticleSystem: {fileID: 0}
+  myParticleSystem: {fileID: 1110253666}
 --- !u!1 &1822566969
 GameObject:
   m_ObjectHideFlags: 0
